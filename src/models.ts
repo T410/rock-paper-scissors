@@ -8,3 +8,10 @@ export interface ItemPosition {
 	x: number;
 	y: number;
 }
+
+export interface Border {
+	top: number;
+	right: number;
+	bottom: number;
+	left: number;
+}
