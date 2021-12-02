@@ -1,11 +1,11 @@
 import { Border, ItemPosition, RPS } from "./models";
 
 const fontSize = 25;
-const viewRange = 500;
+const viewRange = 100;
 
 //function that returns either MAX or -MAX
-function getRandomMovement(v: number) {
-	return Math.random() > 0.5 ? v : -v;
+function getRandomMovement(speed: number) {
+	return Math.random() > 0.5 ? speed : -speed;
 }
 
 function constraint({ x, y, border }: { x?: number; y?: number; border: Border }) {
@@ -27,8 +27,7 @@ function constraint({ x, y, border }: { x?: number; y?: number; border: Border }
 	return { x: Math.floor(x), y: Math.floor(y) };
 }
 
-function getNeighbours(item: ItemPosition, items: ItemPosition[]) {
-	const r = viewRange;
+function getNeighbours(item: ItemPosition, items: ItemPosition[], range: number) {
 	const x = item.x;
 	const y = item.y;
 	const neighbours = items.filter((i) => {
@@ -38,7 +37,7 @@ function getNeighbours(item: ItemPosition, items: ItemPosition[]) {
 		const dx = x - i.x;
 		const dy = y - i.y;
 		const d = Math.sqrt(dx * dx + dy * dy);
-		return d < r;
+		return d < range;
 	});
 
 	return neighbours;
@@ -59,41 +58,41 @@ function moveTowards(source: ItemPosition, target: ItemPosition, v: number) {
 	};
 }
 
-function behaviour(positions: ItemPosition[], v: number) {
+function behaviour(positions: ItemPosition[], speed: number, range: number) {
 	return positions.map((item) => {
-		const neighbours = getNeighbours(item, positions);
+		const neighbours = getNeighbours(item, positions, range);
 
 		if (item.item === RPS.Rock && neighbours.some((n) => n.item === RPS.Scissors)) {
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Scissors),
-				v
+				speed
 			);
 		} else if (item.item === RPS.Paper && neighbours.some((n) => n.item === RPS.Rock)) {
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Rock),
-				v
+				speed
 			);
 		} else if (item.item === RPS.Scissors && neighbours.some((n) => n.item === RPS.Paper)) {
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Paper),
-				v
+				speed
 			);
 		} else {
 			return {
 				...item,
-				x: item.x + getRandomMovement(v),
-				y: item.y + getRandomMovement(v),
+				x: item.x + getRandomMovement(speed),
+				y: item.y + getRandomMovement(speed),
 			};
 		}
 	});
 }
 
-export default function init({ border, v }: { border: Border; v: number }) {
+export default function init({ border, speed, range }: { border: Border; speed: number; range: number }) {
 	return function move(positions: ItemPosition[]) {
-		const newPositions = behaviour(positions, v);
+		const newPositions = behaviour(positions, speed, range);
 		return newPositions.map((item) => {
 			const { x, y } = item;
 			return {

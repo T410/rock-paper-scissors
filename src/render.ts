@@ -2,12 +2,11 @@ import { Border, ItemPosition, RenderOptions, RPS } from "./models";
 import moveInit from "./move";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count } = options;
+	const { canvas, count, speed, range } = options;
 	const context = canvas.getContext("2d");
 
 	const fontSize = 50;
-	const FPS = 60;
-	const v = 10;
+	const FPS = 5;
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
 
@@ -62,7 +61,7 @@ export default function init(options: RenderOptions) {
 		left: 0,
 	};
 
-	const move = moveInit({ border: canvasBorder, v });
+	const move = moveInit({ border: canvasBorder, speed, range });
 
 	let prevDate = Date.now();
 	const throttleAmount = 1000 / FPS;

@@ -1,6 +1,6 @@
 //rock paper scissors enum
 export enum RPS {
-	Rock = "🪨",
+	Rock = "🧱",
 	Paper = "📄",
 	Scissors = "✂️",
 }
@@ -8,6 +8,8 @@ export enum RPS {
 export interface RenderOptions {
 	canvas: HTMLCanvasElement;
 	count: number;
+	speed:number;
+	range:number;
 }
 
 export interface ItemPosition {

@@ -18,6 +18,8 @@ function init() {
 	const renderOptions: RenderOptions = {
 		canvas,
 		count: 1,
+		range: 100,
+		speed: 5,
 	};
 	render(renderOptions);
 }
