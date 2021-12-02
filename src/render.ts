@@ -1,4 +1,4 @@
-import { Border, ItemPosition, RenderOptions } from "./models";
+import { Border, ItemPosition, RenderOptions, RPS } from "./models";
 import moveInit from "./move";
 
 export default function init(options: RenderOptions) {
@@ -7,14 +7,14 @@ export default function init(options: RenderOptions) {
 
 	const fontSize = 50;
 	const FPS = 60;
-	const v = 5;
+	const v = 10;
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
 
 	context.textBaseline = "middle";
 	context.textAlign = "center";
 
-	const _items = ["🪨", "📄", "✂️"];
+	const _items = [RPS.Rock, RPS.Paper, RPS.Scissors];
 
 	function resetCanvas() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
@@ -37,9 +37,9 @@ export default function init(options: RenderOptions) {
 
 	function createPositionObjects(): ItemPosition[] {
 		return _items
-			.map((item) => {
+			.map((item, id) => {
 				return new Array(count).fill(undefined).map(() => {
-					return { item, ...generateRandomPosition() };
+					return { id, item, ...generateRandomPosition() };
 				});
 			})
 			.flat();
@@ -73,7 +73,7 @@ export default function init(options: RenderOptions) {
 			prevDate = Date.now();
 			resetCanvas();
 			//draw the rect again
-			const newPositions = move(positions);
+			newPositions = move(positions);
 			newPositions.forEach(({ item, x, y }) => {
 				for (let i = 0; i < count; i++) {
 					context.font = `${fontSize}px Arial`;

@@ -1,8 +1,8 @@
 import { RenderOptions } from "./models";
 import render from "./render";
 function init() {
-	const WIDTH = 1600;
-	const HEIGHT = 1200;
+	const WIDTH = 800;
+	const HEIGHT = 600;
 
 	const canvas = document.querySelector("canvas");
 
@@ -17,7 +17,7 @@ function init() {
 
 	const renderOptions: RenderOptions = {
 		canvas,
-		count: 10,
+		count: 1,
 	};
 	render(renderOptions);
 }
