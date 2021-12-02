@@ -63,18 +63,21 @@ function behaviour(positions: ItemPosition[], speed: number, range: number) {
 		const neighbours = getNeighbours(item, positions, range);
 
 		if (item.item === RPS.Rock && neighbours.some((n) => n.item === RPS.Scissors)) {
+			console.log("Rock to Scissors");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Scissors),
 				speed
 			);
 		} else if (item.item === RPS.Paper && neighbours.some((n) => n.item === RPS.Rock)) {
+			console.log("Paper to Rock");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Rock),
 				speed
 			);
 		} else if (item.item === RPS.Scissors && neighbours.some((n) => n.item === RPS.Paper)) {
+			console.log("Scissors to Paper");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Paper),

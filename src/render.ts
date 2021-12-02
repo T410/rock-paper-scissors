@@ -2,11 +2,10 @@ import { Border, ItemPosition, RenderOptions, RPS } from "./models";
 import moveInit from "./move";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count, speed, range } = options;
+	const { canvas, count, speed, range, FPS } = options;
 	const context = canvas.getContext("2d");
 
 	const fontSize = 50;
-	const FPS = 5;
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
 
@@ -78,6 +77,12 @@ export default function init(options: RenderOptions) {
 					context.font = `${fontSize}px Arial`;
 					context.fillStyle = "white";
 					context.fillText(item, x, y);
+
+					//draw a circle at x, y with radius range
+					context.beginPath();
+					context.arc(x, y, range, 0, 2 * Math.PI, false);
+					context.fillStyle = "rgba(255, 255, 255, 0.5)";
+					context.fill();
 				}
 			});
 		}

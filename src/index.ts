@@ -18,8 +18,9 @@ function init() {
 	const renderOptions: RenderOptions = {
 		canvas,
 		count: 1,
-		range: 100,
+		range: 200,
 		speed: 5,
+		FPS: 2,
 	};
 	render(renderOptions);
 }

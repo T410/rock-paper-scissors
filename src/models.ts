@@ -8,8 +8,9 @@ export enum RPS {
 export interface RenderOptions {
 	canvas: HTMLCanvasElement;
 	count: number;
-	speed:number;
-	range:number;
+	speed: number;
+	range: number;
+	FPS: number;
 }
 
 export interface ItemPosition {
