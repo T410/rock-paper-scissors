@@ -1,11 +1,10 @@
-import { Border, ItemPosition, RenderOptions, RPS } from "./models";
+import { Border, Item, RenderOptions, RPS } from "./models";
 import moveInit from "./move";
+import { calculateBorder } from "./helper";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count, speed, range, FPS } = options;
+	const { canvas, count, speed, range, FPS, hitbox } = options;
 	const context = canvas.getContext("2d");
-
-	const fontSize = 50;
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
 
@@ -23,7 +22,7 @@ export default function init(options: RenderOptions) {
 	resetCanvas();
 
 	function getRandomNumber(val: number) {
-		return Math.floor(Math.random() * val * 0.95 + fontSize);
+		return Math.floor(Math.random() * val * 0.95 + hitbox);
 	}
 
 	function generateRandomPosition() {
@@ -33,11 +32,12 @@ export default function init(options: RenderOptions) {
 		};
 	}
 
-	function createPositionObjects(): ItemPosition[] {
+	function createPositionObjects(): Item[] {
 		return _items
 			.map((item, id) => {
 				return new Array(count).fill(undefined).map(() => {
-					return { id, item, ...generateRandomPosition() };
+					const pos = generateRandomPosition();
+					return { id, item, ...pos, border: calculateBorder({ ...pos, hitbox }) };
 				});
 			})
 			.flat();
@@ -47,7 +47,7 @@ export default function init(options: RenderOptions) {
 
 	items.forEach(({ item, x, y }) => {
 		for (let i = 0; i < count; i++) {
-			context.font = `${fontSize}px Arial`;
+			context.font = `${hitbox}px Arial`;
 			context.fillStyle = "white";
 			context.fillText(item, x, y);
 		}
@@ -60,13 +60,13 @@ export default function init(options: RenderOptions) {
 		left: 0,
 	};
 
-	const move = moveInit({ border: canvasBorder, speed, range });
+	const move = moveInit({ border: canvasBorder, speed, range, hitbox });
 
 	let prevDate = Date.now();
 	const throttleAmount = 1000 / FPS;
 
-	function animate(positions: ItemPosition[]) {
-		let newPositions: ItemPosition[];
+	function animate(positions: Item[]) {
+		let newPositions: Item[];
 		if (Date.now() - prevDate > throttleAmount) {
 			prevDate = Date.now();
 			resetCanvas();
@@ -74,15 +74,15 @@ export default function init(options: RenderOptions) {
 			newPositions = move(positions);
 			newPositions.forEach(({ item, x, y }) => {
 				for (let i = 0; i < count; i++) {
-					context.font = `${fontSize}px Arial`;
+					context.font = `${hitbox}px Arial`;
 					context.fillStyle = "white";
 					context.fillText(item, x, y);
 
 					//draw a circle at x, y with radius range
 					context.beginPath();
-					context.arc(x, y, range, 0, 2 * Math.PI, false);
-					context.strokeStyle = "rgba(255, 155, 155, 0.1)";
-					context.stroke();
+					// context.arc(x, y, range, 0, 2 * Math.PI, false);
+					// context.strokeStyle = "rgba(255, 155, 155, 0.5)";
+					// context.stroke();
 				}
 			});
 		}

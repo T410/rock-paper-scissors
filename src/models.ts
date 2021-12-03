@@ -11,13 +11,13 @@ export interface RenderOptions {
 	speed: number;
 	range: number;
 	FPS: number;
+	hitbox: number;
 }
 
-export interface ItemPosition {
+export interface Item extends Point2D {
 	id: number;
 	item: string;
-	x: number;
-	y: number;
+	border: Border;
 }
 
 export interface Border {
@@ -25,4 +25,9 @@ export interface Border {
 	right: number;
 	bottom: number;
 	left: number;
+}
+
+export interface Point2D {
+	x: number;
+	y: number;
 }
