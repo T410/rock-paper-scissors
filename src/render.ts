@@ -81,8 +81,8 @@ export default function init(options: RenderOptions) {
 					//draw a circle at x, y with radius range
 					context.beginPath();
 					context.arc(x, y, range, 0, 2 * Math.PI, false);
-					context.fillStyle = "rgba(255, 255, 255, 0.5)";
-					context.fill();
+					context.strokeStyle = "rgba(255, 155, 155, 0.1)";
+					context.stroke();
 				}
 			});
 		}

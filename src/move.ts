@@ -43,18 +43,15 @@ function getNeighbours(item: ItemPosition, items: ItemPosition[], range: number)
 	return neighbours;
 }
 
-function moveTowards(source: ItemPosition, target: ItemPosition, v: number) {
-	//given a source and target
-	//calculate the angle between them
-	const angle = Math.atan2(target.y - source.y, target.x - source.x);
-	//calculate the distance between them
-	const distance = Math.sqrt(Math.pow(target.y - source.y, 2) + Math.pow(target.x - source.x, 2));
-	const x = Math.cos(angle) * v;
-	const y = Math.sin(angle) * v;
+function moveTowards(source: ItemPosition, target: ItemPosition, v: number): ItemPosition {
+	const { x: sourceX, y: sourceY } = source;
+	const { x: targetX, y: targetY } = target;
+	const angle = Math.atan2(targetY - sourceY, targetX - sourceX);
+	//move sourceX sourceY to targetX targetY by v amount in 2D coordinates system
 	return {
 		...source,
-		x: Math.floor(x),
-		y: Math.floor(y),
+		x: sourceX + v * Math.cos(angle),
+		y: sourceY + v * Math.sin(angle),
 	};
 }
 
@@ -63,21 +60,21 @@ function behaviour(positions: ItemPosition[], speed: number, range: number) {
 		const neighbours = getNeighbours(item, positions, range);
 
 		if (item.item === RPS.Rock && neighbours.some((n) => n.item === RPS.Scissors)) {
-			console.log("Rock to Scissors");
+			// console.log("Rock to Scissors");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Scissors),
 				speed
 			);
 		} else if (item.item === RPS.Paper && neighbours.some((n) => n.item === RPS.Rock)) {
-			console.log("Paper to Rock");
+			// console.log("Paper to Rock");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Rock),
 				speed
 			);
 		} else if (item.item === RPS.Scissors && neighbours.some((n) => n.item === RPS.Paper)) {
-			console.log("Scissors to Paper");
+			// console.log("Scissors to Paper");
 			return moveTowards(
 				item,
 				neighbours.find((n) => n.item === RPS.Paper),
