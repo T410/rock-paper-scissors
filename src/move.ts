@@ -115,23 +115,32 @@ function checkCollision(origin: Border, target: Border) {
 	return false;
 }
 
-function checkConverts(items: Item[]) {
+function checkConverts(items: Item[], isZombie: boolean) {
 	for (let i = 0; i < items.length; i++) {
 		const source = items[i];
 		for (let j = 0; j < items.length; j++) {
 			const target = items[j];
 			if (i !== j) {
-				if (getPreyKind(target.kind) === source.kind && checkCollision(source.border, target.border)) {
-					items[i] = {
-						...source,
-						kind: target.kind,
-					};
+				if (
+					items[i] &&
+					items[j] &&
+					getPreyKind(target.kind) === source.kind &&
+					checkCollision(source.border, target.border)
+				) {
+					if (isZombie) {
+						items[i] = {
+							...source,
+							kind: target.kind,
+						};
+					} else {
+						items[i] = null;
+					}
 				}
 				continue;
 			}
 		}
 	}
-	return items;
+	return items.filter((x) => x);
 }
 
 export default function init({
@@ -139,17 +148,20 @@ export default function init({
 	speed,
 	range,
 	hitbox,
+	isZombie,
 }: {
 	border: Border;
 	speed: number;
 	range: number;
 	hitbox: number;
+	isZombie: boolean;
 }) {
 	return function moveInit(positions: Item[]) {
 		positions = move(positions, speed, range, hitbox).map((x) => {
 			return { ...x, border: calculateBorder({ ...x, hitbox }) };
 		});
-		positions = checkConverts(positions);
+		positions = checkConverts(positions, isZombie);
+
 		return positions.map((item) => {
 			const { x, y } = item;
 			return {

@@ -3,8 +3,11 @@ import moveInit from "./move";
 import { calculateBorder } from "./helper";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count, speed, range, FPS, hitbox, drawHitbox } = options;
+	const { canvas, count, speed, range, FPS, hitbox, drawHitbox, zombie } = options;
 	let currentFPS = FPS;
+	let currentCount = count;
+	let isZombie = zombie;
+
 	const context = canvas.getContext("2d");
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
@@ -33,11 +36,11 @@ export default function init(options: RenderOptions) {
 		};
 	}
 
-	function createPositionObjects(): Item[] {
+	function createItems(): Item[] {
 		let id = 0;
 		return kinds
 			.map((kind) => {
-				return new Array(count).fill(undefined).map(() => {
+				return new Array(currentCount).fill(undefined).map(() => {
 					const pos = generateRandomPosition();
 					return { id: id++, kind, ...pos, border: calculateBorder({ ...pos, hitbox }) };
 				});
@@ -45,15 +48,23 @@ export default function init(options: RenderOptions) {
 			.flat();
 	}
 
-	const items = createPositionObjects();
+	let items = createItems();
 
-	items.forEach(({ kind: item, x, y }) => {
-		for (let i = 0; i < count; i++) {
-			context.font = `${hitbox}px Arial`;
-			context.fillStyle = "white";
-			context.fillText(item, x, y);
-		}
-	});
+	function drawItems(items: Item[]) {
+		items.forEach(({ kind: item, x, y }) => {
+			for (let i = 0; i < currentCount; i++) {
+				context.font = `${hitbox}px Arial`;
+				context.fillStyle = "white";
+				context.fillText(item, x, y);
+
+				if (drawHitbox) {
+					//draw a cube around the text side as hitbox amount
+					context.strokeStyle = "red";
+					context.strokeRect(x - hitbox / 2, y - hitbox / 2, hitbox, hitbox);
+				}
+			}
+		});
+	}
 
 	const canvasBorder: Border = {
 		top: 0,
@@ -62,7 +73,7 @@ export default function init(options: RenderOptions) {
 		left: 0,
 	};
 
-	const move = moveInit({ border: canvasBorder, speed, range, hitbox });
+	let move = moveInit({ border: canvasBorder, speed, range, hitbox, isZombie });
 
 	let prevDate = Date.now();
 	let throttleAmount = 1000 / currentFPS;
@@ -74,32 +85,42 @@ export default function init(options: RenderOptions) {
 			resetCanvas();
 			//draw the rect again
 			newPositions = move(positions);
-			newPositions.forEach(({ kind: item, x, y }) => {
-				for (let i = 0; i < count; i++) {
-					context.font = `${hitbox}px Arial`;
-					context.fillStyle = "white";
-					context.fillText(item, x, y);
-
-					if (drawHitbox) {
-						//draw a cube around the text side as hitbox amount
-						context.strokeStyle = "red";
-						context.strokeRect(x - hitbox / 2, y - hitbox / 2, hitbox, hitbox);
-					}
-				}
-			});
+			drawItems(newPositions);
 		}
 		frame = requestAnimationFrame(() => {
 			animate(newPositions ?? positions);
 		});
 	}
 
-	frame = requestAnimationFrame(() => {
-		animate(items);
-	});
+	function start() {
+		frame = requestAnimationFrame(() => {
+			animate(items);
+		});
+	}
+
+	start();
+
+	function stop() {
+		cancelAnimationFrame(frame);
+	}
 
 	function updateFPS(val: number) {
 		currentFPS = val;
 		throttleAmount = 1000 / currentFPS;
 	}
-	return { updateFPS };
+
+	function updateCount(val: number) {
+		stop();
+		currentCount = val;
+		items = createItems();
+		start();
+	}
+
+	function updateZombie(val: boolean) {
+		stop();
+		isZombie = val;
+		move = moveInit({ border: canvasBorder, speed, range, hitbox, isZombie });
+		start();
+	}
+	return { updateFPS, updateCount, updateZombie };
 }

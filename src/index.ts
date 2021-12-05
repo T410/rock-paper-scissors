@@ -2,7 +2,7 @@ import { RenderOptions } from "./models";
 import render from "./render";
 import "./style.css";
 
-function showFPS(target: HTMLElement, FPS: number) {
+function showValue(target: HTMLElement, FPS: number) {
 	let fpsString = FPS.toString();
 	if (fpsString.length < 2) {
 		fpsString = "0" + fpsString;
@@ -12,20 +12,53 @@ function showFPS(target: HTMLElement, FPS: number) {
 }
 
 function init() {
-	const fpsInput = document.getElementById("fps") as HTMLInputElement;
-	const fpsValue = document.getElementById("fpsValue") as HTMLSpanElement;
+	const canvas = document.querySelector("canvas");
+
+	let renderOptions: RenderOptions = {
+		canvas,
+		count: 10,
+		range: 500,
+		speed: 2,
+		FPS: 60,
+		hitbox: 25,
+		drawHitbox: false,
+		zombie: true,
+	};
+
+	const countInput = document.querySelector("#count") as HTMLInputElement;
+	const countValue = document.querySelector("#countValue") as HTMLElement;
+
+	countInput.addEventListener("change", (e: InputEvent) => {
+		const target = e.target as HTMLInputElement;
+		let count = target.valueAsNumber;
+		if (count > 25) {
+			count = 25;
+			target.value = "25";
+		}
+		updateCount(count);
+		showValue(countValue, count);
+	});
+
+	const fpsInput = document.querySelector("#fps") as HTMLInputElement;
+	const fpsValue = document.querySelector("#fpsValue") as HTMLSpanElement;
 
 	fpsInput.addEventListener("change", (e: InputEvent) => {
-		const fps = parseInt((e.target as HTMLInputElement).value);
+		const fps = (e.target as HTMLInputElement).valueAsNumber;
 		updateFPS(fps);
-		showFPS(fpsValue, fps);
+		showValue(fpsValue, fps);
+	});
+
+	const zombieCheck = document.querySelector("#zombie") as HTMLInputElement;
+
+	zombieCheck.addEventListener("change", (e: InputEvent) => {
+		//detect if input type checkbox is checked or not
+		const isChecked = (e.target as HTMLInputElement).checked;
+		updateZombie(isChecked);
 	});
 
 	const scale = 0.5;
 	const WIDTH = 1920 * scale;
 	const HEIGHT = window.visualViewport.height * scale * 0.9;
-
-	const canvas = document.querySelector("canvas");
 
 	function prepareCanvas(canvas: HTMLCanvasElement) {
 		canvas.width = WIDTH;
@@ -34,18 +67,10 @@ function init() {
 
 	prepareCanvas(canvas);
 
-	const renderOptions: RenderOptions = {
-		canvas,
-		count: 10,
-		range: 500,
-		speed: 2,
-		FPS: 60,
-		hitbox: 25,
-		drawHitbox: false,
-	};
-	showFPS(fpsValue, renderOptions.FPS);
+	showValue(fpsValue, renderOptions.FPS);
+	showValue(countValue, renderOptions.count);
 
-	const { updateFPS } = render(renderOptions);
+	const { updateFPS, updateCount, updateZombie } = render(renderOptions);
 }
 
 init();
