@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+html,
+body {
+	font-family: "Roboto", sans-serif;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+input {
+	border-radius: 2%;
+	border-color: #ccc;
+	border-width: 1px;
+	font-size: larger;
+}
+
+#root {
+	width: 100%;
+	margin: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+canvas {
+	width: 50%;
+}
+
+.settings {
+	width: 50%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	height: 4rem;
+	background-color: #ccc;
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+}
+
+/*Selector for each children except the first one*/
+.settings > *:not(:first-child) {
+	margin-left: 2rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+label {
+	margin-right: 0.5rem;
+	font-size: larger;
+}
