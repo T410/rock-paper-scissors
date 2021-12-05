@@ -21,7 +21,7 @@ function constraint({ x, y, border, hitbox }: { x?: number; y?: number; border: 
 			y = border.bottom - hitbox;
 		}
 	}
-	return { x: Math.floor(x), y: Math.floor(y) };
+	return { x, y };
 }
 
 function getNeighbours(item: Item, items: Item[], range: number) {
@@ -43,10 +43,15 @@ function getNeighbours(item: Item, items: Item[], range: number) {
 function moveTowards(source: Item, target: Item, v: number, hitbox: number): Item {
 	const { x: sourceX, y: sourceY } = source;
 	const { x: targetX, y: targetY } = target;
-	const angle = Math.atan2(targetY - sourceY, targetX - sourceX);
 
-	const x = sourceX + v * Math.cos(angle);
-	const y = sourceY + v * Math.sin(angle);
+	const dx = targetX - sourceX;
+	const dy = targetY - sourceY;
+
+	const vx = (dx / (Math.abs(dx) + Math.abs(dy))) * v;
+	const vy = (dy / (Math.abs(dx) + Math.abs(dy))) * v;
+
+	const x = sourceX + vx;
+	const y = sourceY + vy;
 
 	const newItem = { ...source, x, y };
 	const newItemBorder = calculateBorder({ ...newItem, hitbox });
@@ -57,6 +62,21 @@ function moveTowards(source: Item, target: Item, v: number, hitbox: number): Ite
 		y,
 		border: newItemBorder,
 	};
+}
+
+function getClosest(item: Item, targets: Item[]) {
+	let closest: Item | undefined;
+	let closestDistance = Infinity;
+	targets.forEach((target) => {
+		const dx = item.x - target.x;
+		const dy = item.y - target.y;
+		const d = Math.sqrt(dx * dx + dy * dy);
+		if (d < closestDistance) {
+			closest = target;
+			closestDistance = d;
+		}
+	});
+	return closest;
 }
 
 function getPreyKind(kind: RPS) {
@@ -72,7 +92,7 @@ function move(positions: Item[], speed: number, range: number, hitbox: number) {
 		const preys = getPreys(item, getNeighbours(item, positions, range));
 
 		if (preys.length > 0) {
-			const prey = preys[0];
+			const prey = getClosest(item, preys);
 			return moveTowards(item, prey, speed, hitbox);
 		}
 		return {

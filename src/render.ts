@@ -3,7 +3,7 @@ import moveInit from "./move";
 import { calculateBorder } from "./helper";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count, speed, range, FPS, hitbox } = options;
+	const { canvas, count, speed, range, FPS, hitbox, drawHitbox } = options;
 	const context = canvas.getContext("2d");
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
@@ -79,9 +79,11 @@ export default function init(options: RenderOptions) {
 					context.fillStyle = "white";
 					context.fillText(item, x, y);
 
-					//draw a cube around the text side as hitbox amount
-					context.strokeStyle = "red";
-					context.strokeRect(x - hitbox / 2, y - hitbox / 2, hitbox, hitbox);
+					if (drawHitbox) {
+						//draw a cube around the text side as hitbox amount
+						context.strokeStyle = "red";
+						context.strokeRect(x - hitbox / 2, y - hitbox / 2, hitbox, hitbox);
+					}
 				}
 			});
 		}
