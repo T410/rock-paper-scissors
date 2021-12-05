@@ -5,6 +5,12 @@ export enum RPS {
 	Scissors = "✂️",
 }
 
+export enum Preys {
+	"🧱" = "Scissors",
+	"📄" = "Rock",
+	"✂️" = "Paper",
+}
+
 export interface RenderOptions {
 	canvas: HTMLCanvasElement;
 	count: number;

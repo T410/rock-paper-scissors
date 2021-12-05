@@ -78,11 +78,9 @@ export default function init(options: RenderOptions) {
 					context.fillStyle = "white";
 					context.fillText(item, x, y);
 
-					//draw a circle at x, y with radius range
-					context.beginPath();
-					// context.arc(x, y, range, 0, 2 * Math.PI, false);
-					// context.strokeStyle = "rgba(255, 155, 155, 0.5)";
-					// context.stroke();
+					//draw a cube around the text side as hitbox amount
+					context.strokeStyle = "red";
+					context.strokeRect(x - hitbox / 2, y - hitbox / 2, hitbox, hitbox);
 				}
 			});
 		}

@@ -1,9 +1,6 @@
 import { calculateBorder } from "./helper";
-import { Border, Item, Point2D, RPS } from "./models";
+import { Border, Item, Preys, RPS } from "./models";
 
-const viewRange = 100;
-
-//function that returns either MAX or -MAX
 function getRandomMovement(speed: number) {
 	return Math.random() > 0.5 ? speed : -speed;
 }
@@ -63,38 +60,24 @@ function moveTowards(source: Item, target: Item, v: number, hitbox: number): Ite
 	};
 }
 
+function getPreys(item: Item, items: Item[], range: number) {
+	const neighbours = getNeighbours(item, items, range);
+	return neighbours.filter((n) => n.item === RPS[Preys[item.item as RPS]]);
+}
+
 function move(positions: Item[], speed: number, range: number, hitbox: number) {
 	return positions.map((item) => {
-		const neighbours = getNeighbours(item, positions, range);
+		const preys = getPreys(item, positions, range);
 
-		if (item.item === RPS.Rock && neighbours.some((n) => n.item === RPS.Scissors)) {
-			return moveTowards(
-				item,
-				neighbours.find((n) => n.item === RPS.Scissors),
-				speed,
-				hitbox
-			);
-		} else if (item.item === RPS.Paper && neighbours.some((n) => n.item === RPS.Rock)) {
-			return moveTowards(
-				item,
-				neighbours.find((n) => n.item === RPS.Rock),
-				speed,
-				hitbox
-			);
-		} else if (item.item === RPS.Scissors && neighbours.some((n) => n.item === RPS.Paper)) {
-			return moveTowards(
-				item,
-				neighbours.find((n) => n.item === RPS.Paper),
-				speed,
-				hitbox
-			);
-		} else {
-			return {
-				...item,
-				x: item.x + getRandomMovement(speed),
-				y: item.y + getRandomMovement(speed),
-			};
+		if (preys.length > 0) {
+			const prey = preys[0];
+			return moveTowards(item, prey, speed, hitbox);
 		}
+		return {
+			...item,
+			x: item.x + getRandomMovement(speed),
+			y: item.y + getRandomMovement(speed),
+		};
 	});
 }
 
@@ -164,13 +147,5 @@ export default function init({
 			};
 		});
 		return positions;
-		// return newPositions.map((item) => {
-		// 	const { x, y } = item;
-		// 	return {
-		// 		...item,
-		// 		x: constraint({ x, border, hitbox }).x,
-		// 		y: constraint({ y, border, hitbox }).y,
-		// 	};
-		// });
 	};
 }
