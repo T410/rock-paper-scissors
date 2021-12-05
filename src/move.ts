@@ -39,8 +39,7 @@ function getNeighbours(item: Item, items: Item[], range: number) {
 
 	return neighbours;
 }
-let i = 3;
-let now = Date.now() - 1000;
+
 function moveTowards(source: Item, target: Item, v: number, hitbox: number): Item {
 	const { x: sourceX, y: sourceY } = source;
 	const { x: targetX, y: targetY } = target;
