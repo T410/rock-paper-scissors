@@ -18,6 +18,7 @@ export interface RenderOptions {
 	range: number;
 	FPS: number;
 	hitbox: number;
+	drawHitbox: boolean;
 }
 
 export interface Item extends Point2D {
