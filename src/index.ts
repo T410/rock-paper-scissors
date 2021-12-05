@@ -23,6 +23,7 @@ function init() {
 		speed: 2,
 		FPS: 60,
 		hitbox: 50,
+		drawHitbox: false,
 	};
 	render(renderOptions);
 }
