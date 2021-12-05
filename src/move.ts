@@ -21,7 +21,7 @@ function constraint({ x, y, border, hitbox }: { x?: number; y?: number; border: 
 			y = border.bottom - hitbox;
 		}
 	}
-	return { x: Math.floor(x), y: Math.floor(y) };
+	return { x, y };
 }
 
 function getNeighbours(item: Item, items: Item[], range: number) {
