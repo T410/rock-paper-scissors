@@ -69,8 +69,7 @@ function getPreys(item: Item, targets: Item[]) {
 
 function move(positions: Item[], speed: number, range: number, hitbox: number) {
 	return positions.map((item) => {
-		const neighbours = getNeighbours(item, positions, range);
-		const preys = getPreys(item, neighbours);
+		const preys = getPreys(item, getNeighbours(item, positions, range));
 
 		if (preys.length > 0) {
 			const prey = preys[0];
@@ -96,16 +95,23 @@ function checkCollision(origin: Border, target: Border) {
 	return false;
 }
 
-function checkConverts(item: Item, _index: number, array: Item[], hitbox: number) {
-	let r: Item = { ...item };
-	array.forEach((n) => {
-		if (item.id !== n.id && checkCollision(item.border, n.border)) {
-			if (getPreyKind(n.kind) === item.kind) {
-				r = { ...item, kind: n.kind };
+function checkConverts(items: Item[]) {
+	for (let i = 0; i < items.length; i++) {
+		const source = items[i];
+		for (let j = 0; j < items.length; j++) {
+			const target = items[j];
+			if (i !== j) {
+				if (getPreyKind(target.kind) === source.kind && checkCollision(source.border, target.border)) {
+					items[i] = {
+						...source,
+						kind: target.kind,
+					};
+				}
+				continue;
 			}
 		}
-	});
-	return r;
+	}
+	return items;
 }
 
 export default function init({
@@ -123,15 +129,15 @@ export default function init({
 		positions = move(positions, speed, range, hitbox).map((x) => {
 			return { ...x, border: calculateBorder({ ...x, hitbox }) };
 		});
-		positions = positions.map((item, i, a) => {
-			const c = checkConverts(item, i, a, hitbox);
+		positions = checkConverts(positions);
+		return positions.map((item) => {
 			const { x, y } = item;
 			return {
-				...c,
+				...item,
 				x: constraint({ x, border, hitbox }).x,
 				y: constraint({ y, border, hitbox }).y,
+				border: calculateBorder({ ...item, hitbox }),
 			};
 		});
-		return positions;
 	};
 }

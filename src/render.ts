@@ -33,11 +33,12 @@ export default function init(options: RenderOptions) {
 	}
 
 	function createPositionObjects(): Item[] {
+		let id = 0;
 		return kinds
-			.map((kind, id) => {
+			.map((kind) => {
 				return new Array(count).fill(undefined).map(() => {
 					const pos = generateRandomPosition();
-					return { id, kind, ...pos, border: calculateBorder({ ...pos, hitbox }) };
+					return { id: id++, kind, ...pos, border: calculateBorder({ ...pos, hitbox }) };
 				});
 			})
 			.flat();
