@@ -60,14 +60,18 @@ function moveTowards(source: Item, target: Item, v: number, hitbox: number): Ite
 	};
 }
 
-function getPreys(item: Item, items: Item[], range: number) {
-	const neighbours = getNeighbours(item, items, range);
-	return neighbours.filter((n) => n.item === RPS[Preys[item.item as RPS]]);
+function getPreyKind(kind: RPS) {
+	return RPS[Preys[kind]];
+}
+
+function getPreys(item: Item, targets: Item[]) {
+	return targets.filter((n) => n.item === getPreyKind(item.item as RPS));
 }
 
 function move(positions: Item[], speed: number, range: number, hitbox: number) {
 	return positions.map((item) => {
-		const preys = getPreys(item, positions, range);
+		const neighbours = getNeighbours(item, positions, range);
+		const preys = getPreys(item, neighbours);
 
 		if (preys.length > 0) {
 			const prey = preys[0];
@@ -97,25 +101,8 @@ function checkConverts(item: Item, _index: number, array: Item[], hitbox: number
 	let r: Item = { ...item };
 	array.forEach((n) => {
 		if (item.id !== n.id && checkCollision(item.border, n.border)) {
-			switch (item.item) {
-				case RPS.Rock: {
-					if (n.item === RPS.Paper) {
-						r = { ...item, item: RPS.Paper };
-					}
-					break;
-				}
-				case RPS.Paper: {
-					if (n.item === RPS.Scissors) {
-						r = { ...item, item: RPS.Scissors };
-					}
-					break;
-				}
-				case RPS.Scissors: {
-					if (n.item === RPS.Rock) {
-						r = { ...item, item: RPS.Rock };
-					}
-					break;
-				}
+			if (getPreyKind(n.item as RPS) === item.item) {
+				r = { ...item, item: n.item };
 			}
 		}
 	});
