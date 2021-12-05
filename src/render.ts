@@ -11,7 +11,7 @@ export default function init(options: RenderOptions) {
 	context.textBaseline = "middle";
 	context.textAlign = "center";
 
-	const _items = [RPS.Rock, RPS.Paper, RPS.Scissors];
+	const kinds = [RPS.Rock, RPS.Paper, RPS.Scissors];
 
 	function resetCanvas() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
@@ -33,11 +33,11 @@ export default function init(options: RenderOptions) {
 	}
 
 	function createPositionObjects(): Item[] {
-		return _items
-			.map((item, id) => {
+		return kinds
+			.map((kind, id) => {
 				return new Array(count).fill(undefined).map(() => {
 					const pos = generateRandomPosition();
-					return { id, item, ...pos, border: calculateBorder({ ...pos, hitbox }) };
+					return { id, kind, ...pos, border: calculateBorder({ ...pos, hitbox }) };
 				});
 			})
 			.flat();
@@ -45,7 +45,7 @@ export default function init(options: RenderOptions) {
 
 	const items = createPositionObjects();
 
-	items.forEach(({ item, x, y }) => {
+	items.forEach(({ kind: item, x, y }) => {
 		for (let i = 0; i < count; i++) {
 			context.font = `${hitbox}px Arial`;
 			context.fillStyle = "white";
@@ -72,7 +72,7 @@ export default function init(options: RenderOptions) {
 			resetCanvas();
 			//draw the rect again
 			newPositions = move(positions);
-			newPositions.forEach(({ item, x, y }) => {
+			newPositions.forEach(({ kind: item, x, y }) => {
 				for (let i = 0; i < count; i++) {
 					context.font = `${hitbox}px Arial`;
 					context.fillStyle = "white";

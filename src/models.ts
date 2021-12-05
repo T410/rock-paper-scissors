@@ -22,7 +22,7 @@ export interface RenderOptions {
 
 export interface Item extends Point2D {
 	id: number;
-	item: string;
+	kind: RPS;
 	border: Border;
 }
 

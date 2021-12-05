@@ -44,14 +44,13 @@ function moveTowards(source: Item, target: Item, v: number, hitbox: number): Ite
 	const { x: sourceX, y: sourceY } = source;
 	const { x: targetX, y: targetY } = target;
 	const angle = Math.atan2(targetY - sourceY, targetX - sourceX);
-	//move sourceX sourceY to targetX targetY by v amount in 2D coordinates system#
+
 	const x = sourceX + v * Math.cos(angle);
 	const y = sourceY + v * Math.sin(angle);
+
 	const newItem = { ...source, x, y };
 	const newItemBorder = calculateBorder({ ...newItem, hitbox });
 
-	// const newX = sourceX + v * Math.cos(angle);
-	// const newY = sourceY + v * Math.sin(angle);
 	return {
 		...source,
 		x,
@@ -65,7 +64,7 @@ function getPreyKind(kind: RPS) {
 }
 
 function getPreys(item: Item, targets: Item[]) {
-	return targets.filter((n) => n.item === getPreyKind(item.item as RPS));
+	return targets.filter((n) => n.kind === getPreyKind(item.kind));
 }
 
 function move(positions: Item[], speed: number, range: number, hitbox: number) {
@@ -101,8 +100,8 @@ function checkConverts(item: Item, _index: number, array: Item[], hitbox: number
 	let r: Item = { ...item };
 	array.forEach((n) => {
 		if (item.id !== n.id && checkCollision(item.border, n.border)) {
-			if (getPreyKind(n.item as RPS) === item.item) {
-				r = { ...item, item: n.item };
+			if (getPreyKind(n.kind) === item.kind) {
+				r = { ...item, kind: n.kind };
 			}
 		}
 	});
