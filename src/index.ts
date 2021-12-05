@@ -13,15 +13,6 @@ function showValue(target: HTMLElement, FPS: number) {
 	target.textContent = FPS.toString();
 }
 
-function showFPS(target: HTMLElement, FPS: number) {
-	let fpsString = FPS.toString();
-	if (fpsString.length < 2) {
-		fpsString = "0" + fpsString;
-	}
-
-	target.textContent = FPS.toString();
-}
-
 function init() {
 	const canvas = document.querySelector("canvas");
 
