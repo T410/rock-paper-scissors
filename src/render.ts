@@ -4,6 +4,7 @@ import { calculateBorder } from "./helper";
 
 export default function init(options: RenderOptions) {
 	const { canvas, count, speed, range, FPS, hitbox, drawHitbox } = options;
+	let currentFPS = FPS;
 	const context = canvas.getContext("2d");
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
@@ -64,7 +65,7 @@ export default function init(options: RenderOptions) {
 	const move = moveInit({ border: canvasBorder, speed, range, hitbox });
 
 	let prevDate = Date.now();
-	const throttleAmount = 1000 / FPS;
+	let throttleAmount = 1000 / currentFPS;
 
 	function animate(positions: Item[]) {
 		let newPositions: Item[];
@@ -95,4 +96,10 @@ export default function init(options: RenderOptions) {
 	frame = requestAnimationFrame(() => {
 		animate(items);
 	});
+
+	function updateFPS(val: number) {
+		currentFPS = val;
+		throttleAmount = 1000 / currentFPS;
+	}
+	return { updateFPS };
 }
