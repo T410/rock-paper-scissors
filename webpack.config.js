@@ -43,7 +43,7 @@ module.exports = function (env) {
 					{},
 					{
 						inject: true,
-						template: path.resolve(__dirname, "dist/index.html"),
+						template: path.resolve(__dirname, "src/index.html"),
 					},
 					isEnvProduction
 						? {
