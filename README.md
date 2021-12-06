@@ -17,3 +17,25 @@ You can see the online version of this code right here!
 `npm start` opens a new browser window and show the project
 
 `npm run build` creates and html and a bundled script file in dist folder
+
+## Used Tech
+
+### HTML Canvas
+
+Used canvas without any packages
+
+### webpack
+
+Generating html from html template and bundling a single script file in dist folder.
+
+Using loaders.
+
+Also using webpack dev server.
+
+### TypeScript
+
+Used TS for everything basically
+
+### Netlify
+
+main branch is automatically deploying to netlify
