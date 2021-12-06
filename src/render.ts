@@ -102,25 +102,22 @@ export default function init(options: RenderOptions) {
 	let prevDate = Date.now();
 	let throttleAmount = 1000 / currentFPS;
 
-	function animate(positions: Item[]) {
+	function animate() {
 		frame = requestAnimationFrame(() => {
-			animate(newPositions ?? positions);
+			animate();
 		});
 
-		let newPositions: Item[];
 		if (Date.now() - prevDate > throttleAmount) {
 			prevDate = Date.now();
 			resetCanvas();
 			//draw the rect again
-			newPositions = move(positions);
-			drawItems(newPositions);
+			items = move(items);
+			drawItems(items);
 		}
 	}
 
 	function start() {
-		frame = requestAnimationFrame(() => {
-			animate(items);
-		});
+		frame = requestAnimationFrame(animate);
 	}
 
 	start();
@@ -147,5 +144,14 @@ export default function init(options: RenderOptions) {
 		move = moveInit(moveParams);
 		start();
 	}
-	return { updateFPS, updateCount, updateZombie };
+	return {
+		updateFPS,
+		updateCount,
+		updateZombie,
+		pause: stop,
+		play: start,
+		replay: () => {
+			items = createItems();
+		},
+	};
 }

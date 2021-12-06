@@ -32,17 +32,24 @@ canvas {
 .settings {
 	width: 50%;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
+	flex-direction: column;
 	justify-content: space-around;
+	align-items: center;
 	height: 4rem;
 	background-color: #555;
 	border-top-left-radius: 1rem;
 	border-top-right-radius: 1rem;
 }
 
+.row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+}
+
 /*Selector for each children except the first one*/
-.settings > *:not(:first-child) {
+.row > *:not(:first-child) {
 	margin-left: 2rem;
 	display: flex;
 	flex-direction: row;
@@ -53,4 +60,22 @@ canvas {
 label {
 	margin-right: 0.5rem;
 	font-size: larger;
+}
+
+.button {
+	height: 2rem;
+	width: 2rem;
+}
+
+.button > * {
+	height: 100%;
+	width: 100%;
+}
+
+.button > img {
+	transition: transform 0.2s;
+}
+
+.button > img:active {
+	transform: scale(0.8);
 }

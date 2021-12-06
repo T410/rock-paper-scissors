@@ -35,6 +35,10 @@ module.exports = function (env) {
 					test: /\.(html)$/,
 					loader: "html-loader",
 				},
+				{
+					test: /\.svg/,
+					type: "asset/inline",
+				}
 			],
 		},
 		plugins: [

@@ -1,6 +1,8 @@
 import { RenderOptions } from "./models";
 import render from "./render";
 import "./style.css";
+import playSVG from "./assets/play.svg";
+import pauseSVG from "./assets/pause.svg";
 
 function showValue(target: HTMLElement, FPS: number) {
 	let fpsString = FPS.toString();
@@ -28,7 +30,7 @@ function init() {
 	const countInput = document.querySelector("#count") as HTMLInputElement;
 	const countValue = document.querySelector("#countValue") as HTMLElement;
 
-	countInput.addEventListener("change", (e: InputEvent) => {
+	countInput.addEventListener("change", (e) => {
 		const target = e.target as HTMLInputElement;
 		let count = target.valueAsNumber;
 		if (count > 25) {
@@ -42,7 +44,7 @@ function init() {
 	const fpsInput = document.querySelector("#fps") as HTMLInputElement;
 	const fpsValue = document.querySelector("#fpsValue") as HTMLSpanElement;
 
-	fpsInput.addEventListener("change", (e: InputEvent) => {
+	fpsInput.addEventListener("change", (e) => {
 		const fps = (e.target as HTMLInputElement).valueAsNumber;
 		updateFPS(fps);
 		showValue(fpsValue, fps);
@@ -50,10 +52,38 @@ function init() {
 
 	const zombieCheck = document.querySelector("#zombie") as HTMLInputElement;
 
-	zombieCheck.addEventListener("change", (e: InputEvent) => {
+	zombieCheck.addEventListener("change", (e) => {
 		//detect if input type checkbox is checked or not
 		const isChecked = (e.target as HTMLInputElement).checked;
 		updateZombie(isChecked);
+	});
+
+	const playPauseButton = document.querySelector("#playPause") as HTMLDivElement;
+	const playPauseImage = playPauseButton.querySelector("img") as HTMLImageElement;
+	function buttonPlay() {
+		play();
+		playPauseButton.setAttribute("playing", "true");
+		playPauseImage.src = pauseSVG;
+	}
+
+	function buttonPause() {
+		playPauseButton.setAttribute("playing", "false");
+		playPauseImage.src = playSVG;
+		pause();
+	}
+
+	playPauseButton.addEventListener("click", () => {
+		if (playPauseButton.getAttribute("playing") === "true") {
+			buttonPause();
+		} else {
+			buttonPlay();
+		}
+	});
+
+	const replayButton = document.querySelector("#replay") as HTMLDivElement;
+	replayButton.addEventListener("click", () => {
+		replay();
+		buttonPlay();
 	});
 
 	const scale = 0.5;
@@ -70,7 +100,7 @@ function init() {
 	showValue(fpsValue, renderOptions.FPS);
 	showValue(countValue, renderOptions.count);
 
-	const { updateFPS, updateCount, updateZombie } = render(renderOptions);
+	const { updateFPS, updateCount, updateZombie, pause, play, replay } = render(renderOptions);
 }
 
 init();
