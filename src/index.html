@@ -6,6 +6,32 @@
 	</head>
 	<body>
 		<div id="root">
+			<div class="settings">
+				<div class="row">
+					<div>
+						<label for="count">Count</label>
+						<input id="count" type="range" value="10" max="25" min="1" />
+						<span id="countValue"></span>
+					</div>
+					<div>
+						<label for="fps">FPS</label>
+						<input id="fps" type="range" value="60" max="60" min="1" step="1" />
+						<span id="fpsValue"></span>
+					</div>
+					<div>
+						<label for="zombie">Zombie Mode</label>
+						<input id="zombie" type="checkbox" checked />
+					</div>
+					<div class="buttons">
+						<div id="playPause" class="button" playing="true">
+							<img src="./assets/pause.svg" alt="" />
+						</div>
+						<div id="replay" class="button">
+							<img src="./assets/replay.svg" alt="" />
+						</div>
+					</div>
+				</div>
+			</div>
 			<canvas></canvas>
 		</div>
 	</body>

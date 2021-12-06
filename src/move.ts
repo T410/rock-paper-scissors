@@ -115,23 +115,43 @@ function checkCollision(origin: Border, target: Border) {
 	return false;
 }
 
-function checkConverts(items: Item[]) {
+function checkConverts(items: Item[], isZombie: boolean) {
 	for (let i = 0; i < items.length; i++) {
 		const source = items[i];
 		for (let j = 0; j < items.length; j++) {
 			const target = items[j];
 			if (i !== j) {
-				if (getPreyKind(target.kind) === source.kind && checkCollision(source.border, target.border)) {
-					items[i] = {
-						...source,
-						kind: target.kind,
-					};
+				if (
+					items[i] &&
+					items[j] &&
+					getPreyKind(target.kind) === source.kind &&
+					checkCollision(source.border, target.border)
+				) {
+					if (isZombie) {
+						items[i] = {
+							...source,
+							kind: target.kind,
+						};
+					} else {
+						items[i] = null;
+					}
 				}
 				continue;
 			}
 		}
 	}
-	return items;
+	return items.filter((x) => x);
+}
+
+function checkGameOver(items: Item[]) {
+	//return true if every item has the same kind
+	let kind = items[0].kind;
+	for (let i = 1; i < items.length; i++) {
+		if (items[i].kind !== kind) {
+			return false;
+		}
+	}
+	return true;
 }
 
 export default function init({
@@ -139,18 +159,23 @@ export default function init({
 	speed,
 	range,
 	hitbox,
+	isZombie,
+	onGameOver,
 }: {
 	border: Border;
 	speed: number;
 	range: number;
 	hitbox: number;
+	isZombie: boolean;
+	onGameOver: (winner: RPS) => void;
 }) {
-	return function moveInit(positions: Item[]) {
-		positions = move(positions, speed, range, hitbox).map((x) => {
+	return function moveInit(items: Item[]) {
+		items = move(items, speed, range, hitbox).map((x) => {
 			return { ...x, border: calculateBorder({ ...x, hitbox }) };
 		});
-		positions = checkConverts(positions);
-		return positions.map((item) => {
+		items = checkConverts(items, isZombie);
+		checkGameOver(items) && onGameOver(items[0].kind);
+		return items.map((item) => {
 			const { x, y } = item;
 			return {
 				...item,

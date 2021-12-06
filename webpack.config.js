@@ -29,12 +29,16 @@ module.exports = function (env) {
 				},
 				{
 					test: /\.css$/,
-					use: ["css-loader"],
+					use: ["style-loader", "css-loader"],
 				},
 				{
 					test: /\.(html)$/,
 					loader: "html-loader",
 				},
+				{
+					test: /\.svg/,
+					type: "asset/inline",
+				}
 			],
 		},
 		plugins: [

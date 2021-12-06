@@ -19,6 +19,8 @@ export interface RenderOptions {
 	FPS: number;
 	hitbox: number;
 	drawHitbox: boolean;
+	zombie: boolean;
+	onGameOver: () => void;
 }
 
 export interface Item extends Point2D {
