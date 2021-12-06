@@ -111,7 +111,6 @@ export default function init(options: RenderOptions) {
 		if (Date.now() - prevDate > throttleAmount) {
 			prevDate = Date.now();
 			resetCanvas();
-
 			items = move(items);
 			drawItems(items);
 		}
