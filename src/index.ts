@@ -4,13 +4,15 @@ import "./style.css";
 import playSVG from "./assets/play.svg";
 import pauseSVG from "./assets/pause.svg";
 
-function showValue(target: HTMLElement, FPS: number) {
-	let fpsString = FPS.toString();
-	if (fpsString.length < 2) {
-		fpsString = "0" + fpsString;
+const MAX_COUNT = 50;
+
+function showValue(target: HTMLElement, val: number) {
+	let valString = val.toString();
+	if (valString.length < 2) {
+		valString = "0" + valString;
 	}
 
-	target.textContent = FPS.toString();
+	target.textContent = valString;
 }
 
 function init() {
@@ -18,11 +20,11 @@ function init() {
 
 	let renderOptions: RenderOptions = {
 		canvas,
-		count: 10,
-		range: 500,
-		speed: 2,
+		count: 15,
+		range: 1000,
+		speed: 3,
 		FPS: 60,
-		hitbox: 25,
+		hitbox: 50,
 		drawHitbox: false,
 		zombie: true,
 		onGameOver,
@@ -36,9 +38,9 @@ function init() {
 	countInput.addEventListener("change", (e) => {
 		const target = e.target as HTMLInputElement;
 		let count = target.valueAsNumber;
-		if (count > 25) {
-			count = 25;
-			target.value = "25";
+		if (count > MAX_COUNT) {
+			count = MAX_COUNT;
+			target.value = MAX_COUNT.toString();
 		}
 		updateCount(count);
 		showValue(countValue, count);
@@ -56,7 +58,6 @@ function init() {
 	const zombieCheck = document.querySelector("#zombie") as HTMLInputElement;
 
 	zombieCheck.addEventListener("change", (e) => {
-		//detect if input type checkbox is checked or not
 		const isChecked = (e.target as HTMLInputElement).checked;
 		updateZombie(isChecked);
 		buttonPlay();
@@ -99,9 +100,8 @@ function init() {
 		isGameOver = true;
 	}
 
-	const scale = 0.5;
-	const WIDTH = 1920 * scale;
-	const HEIGHT = window.visualViewport.height * scale * 0.9;
+	const WIDTH = window.innerWidth;
+	const HEIGHT = 780;
 
 	function prepareCanvas(canvas: HTMLCanvasElement) {
 		canvas.width = WIDTH;
