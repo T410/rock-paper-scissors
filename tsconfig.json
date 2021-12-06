@@ -8,12 +8,20 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         "noImplicitReturns": true,
         "skipLibCheck": true,
         "lib": [
             "ES2021",
             "dom",
         ]
-    }
+    },
+    "include": [
+        "src/**/*.ts",
+        "./custom.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+    ]
 }

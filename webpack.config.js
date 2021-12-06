@@ -29,12 +29,16 @@ module.exports = function (env) {
 				},
 				{
 					test: /\.css$/,
-					use: ["css-loader"],
+					use: ["style-loader", "css-loader"],
 				},
 				{
 					test: /\.(html)$/,
 					loader: "html-loader",
 				},
+				{
+					test: /\.svg/,
+					type: "asset/inline",
+				}
 			],
 		},
 		plugins: [
@@ -43,7 +47,7 @@ module.exports = function (env) {
 					{},
 					{
 						inject: true,
-						template: path.resolve(__dirname, "dist/index.html"),
+						template: path.resolve(__dirname, "src/index.html"),
 					},
 					isEnvProduction
 						? {
