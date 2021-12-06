@@ -12,29 +12,32 @@ body {
 	color: white;
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	align-items: center;
+}
+
+h2 {
+	margin: 0;
 }
 
 input {
 	font-size: larger;
+	cursor: pointer;
 }
 
 #root {
-	width: 80%;
-	margin: 1rem;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-canvas {
-	width: 100%;
+	flex: 1;
 }
 
 .settings {
 	width: 100%;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
@@ -46,6 +49,16 @@ canvas {
 
 .settings > *:not(:first-child) {
 	margin-top: 1rem;
+}
+
+.canvasContainer {
+	display: flex;
+	flex: auto;
+}
+
+canvas {
+	width: 100%;
+	height: auto;
 }
 
 .row {
@@ -89,6 +102,10 @@ label {
 	width: 2rem;
 }
 
+.button:hover {
+	cursor: pointer;
+}
+
 .button > * {
 	height: 100%;
 	width: 100%;
@@ -100,4 +117,20 @@ label {
 
 .button > img:active {
 	transform: scale(0.8);
+}
+
+a {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #fefefe;
+}
+
+.me {
+	justify-content: center;
+}
+
+.me > *:first-child {
+	margin-right: 1rem;
 }

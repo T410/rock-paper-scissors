@@ -100,8 +100,8 @@ function init() {
 		isGameOver = true;
 	}
 
-	const WIDTH = 1920;
-	const HEIGHT = 1080;
+	const WIDTH = window.innerWidth;
+	const HEIGHT = 780;
 
 	function prepareCanvas(canvas: HTMLCanvasElement) {
 		canvas.width = WIDTH;
