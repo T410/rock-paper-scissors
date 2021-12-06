@@ -3,7 +3,7 @@ import moveInit from "./move";
 import { calculateBorder } from "./helper";
 
 export default function init(options: RenderOptions) {
-	const { canvas, count, speed, range, FPS, hitbox, drawHitbox, zombie } = options;
+	const { canvas, count, speed, range, FPS, hitbox, drawHitbox, zombie, onGameOver: _onGameOver } = options;
 	let currentFPS = FPS;
 	let currentCount = count;
 	let isZombie = zombie;
@@ -22,6 +22,7 @@ export default function init(options: RenderOptions) {
 		hitbox,
 		isZombie,
 		onGameOver: (winner: RPS) => {
+			_onGameOver();
 			stop();
 			setTimeout(() => {
 				resetCanvas();
@@ -110,13 +111,14 @@ export default function init(options: RenderOptions) {
 		if (Date.now() - prevDate > throttleAmount) {
 			prevDate = Date.now();
 			resetCanvas();
-			//draw the rect again
+
 			items = move(items);
 			drawItems(items);
 		}
 	}
 
 	function start() {
+		cancelAnimationFrame(frame);
 		frame = requestAnimationFrame(animate);
 	}
 
@@ -142,6 +144,7 @@ export default function init(options: RenderOptions) {
 		stop();
 		moveParams.isZombie = val;
 		move = moveInit(moveParams);
+		items = createItems();
 		start();
 	}
 	return {
@@ -150,7 +153,7 @@ export default function init(options: RenderOptions) {
 		updateZombie,
 		pause: stop,
 		play: start,
-		replay: () => {
+		resetItems: () => {
 			items = createItems();
 		},
 	};

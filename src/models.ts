@@ -20,6 +20,7 @@ export interface RenderOptions {
 	hitbox: number;
 	drawHitbox: boolean;
 	zombie: boolean;
+	onGameOver: () => void;
 }
 
 export interface Item extends Point2D {
