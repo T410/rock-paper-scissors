@@ -25,7 +25,10 @@ function init() {
 		hitbox: 25,
 		drawHitbox: false,
 		zombie: true,
+		onGameOver,
 	};
+
+	let isGameOver = false;
 
 	const countInput = document.querySelector("#count") as HTMLInputElement;
 	const countValue = document.querySelector("#countValue") as HTMLElement;
@@ -56,11 +59,16 @@ function init() {
 		//detect if input type checkbox is checked or not
 		const isChecked = (e.target as HTMLInputElement).checked;
 		updateZombie(isChecked);
+		buttonPlay();
 	});
 
 	const playPauseButton = document.querySelector("#playPause") as HTMLDivElement;
 	const playPauseImage = playPauseButton.querySelector("img") as HTMLImageElement;
 	function buttonPlay() {
+		if (isGameOver) {
+			resetItems();
+			isGameOver = false;
+		}
 		play();
 		playPauseButton.setAttribute("playing", "true");
 		playPauseImage.src = pauseSVG;
@@ -82,9 +90,14 @@ function init() {
 
 	const replayButton = document.querySelector("#replay") as HTMLDivElement;
 	replayButton.addEventListener("click", () => {
-		replay();
+		resetItems();
 		buttonPlay();
 	});
+
+	function onGameOver() {
+		buttonPause();
+		isGameOver = true;
+	}
 
 	const scale = 0.5;
 	const WIDTH = 1920 * scale;
@@ -100,7 +113,7 @@ function init() {
 	showValue(fpsValue, renderOptions.FPS);
 	showValue(countValue, renderOptions.count);
 
-	const { updateFPS, updateCount, updateZombie, pause, play, replay } = render(renderOptions);
+	const { updateFPS, updateCount, updateZombie, pause, play, resetItems } = render(renderOptions);
 }
 
 init();
