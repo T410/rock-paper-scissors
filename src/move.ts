@@ -143,26 +143,39 @@ function checkConverts(items: Item[], isZombie: boolean) {
 	return items.filter((x) => x);
 }
 
+function checkGameOver(items: Item[]) {
+	//return true if every item has the same kind
+	let kind = items[0].kind;
+	for (let i = 1; i < items.length; i++) {
+		if (items[i].kind !== kind) {
+			return false;
+		}
+	}
+	return true;
+}
+
 export default function init({
 	border,
 	speed,
 	range,
 	hitbox,
 	isZombie,
+	onGameOver,
 }: {
 	border: Border;
 	speed: number;
 	range: number;
 	hitbox: number;
 	isZombie: boolean;
+	onGameOver: (winner: RPS) => void;
 }) {
-	return function moveInit(positions: Item[]) {
-		positions = move(positions, speed, range, hitbox).map((x) => {
+	return function moveInit(items: Item[]) {
+		items = move(items, speed, range, hitbox).map((x) => {
 			return { ...x, border: calculateBorder({ ...x, hitbox }) };
 		});
-		positions = checkConverts(positions, isZombie);
-
-		return positions.map((item) => {
+		items = checkConverts(items, isZombie);
+		checkGameOver(items) && onGameOver(items[0].kind);
+		return items.map((item) => {
 			const { x, y } = item;
 			return {
 				...item,
