@@ -8,6 +8,28 @@ export default function init(options: RenderOptions) {
 	let currentCount = count;
 	let isZombie = zombie;
 
+	const canvasBorder: Border = {
+		top: 0,
+		right: canvas.width,
+		bottom: canvas.height,
+		left: 0,
+	};
+
+	const moveParams = {
+		border: canvasBorder,
+		speed,
+		range,
+		hitbox,
+		isZombie,
+		onGameOver: (winner: RPS) => {
+			stop();
+			setTimeout(() => {
+				resetCanvas();
+				announceWinner(winner);
+			}, 100);
+		},
+	};
+
 	const context = canvas.getContext("2d");
 
 	let frame: ReturnType<typeof requestAnimationFrame>;
@@ -21,6 +43,15 @@ export default function init(options: RenderOptions) {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		context.fillStyle = "rgba(0, 0, 0, 0.5)";
 		context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+	}
+
+	function announceWinner(winner: RPS) {
+		context.fillStyle = "white";
+		context.font = "bold 200px sans-serif";
+		context.fillText(winner, canvas.width / 2, canvas.height / 2 - 50);
+
+		context.font = "bold 100px sans-serif";
+		context.fillText("Winner", canvas.width / 2, canvas.height / 2 + 100);
 	}
 
 	resetCanvas();
@@ -66,19 +97,16 @@ export default function init(options: RenderOptions) {
 		});
 	}
 
-	const canvasBorder: Border = {
-		top: 0,
-		right: canvas.width,
-		bottom: canvas.height,
-		left: 0,
-	};
-
-	let move = moveInit({ border: canvasBorder, speed, range, hitbox, isZombie });
+	let move = moveInit(moveParams);
 
 	let prevDate = Date.now();
 	let throttleAmount = 1000 / currentFPS;
 
 	function animate(positions: Item[]) {
+		frame = requestAnimationFrame(() => {
+			animate(newPositions ?? positions);
+		});
+
 		let newPositions: Item[];
 		if (Date.now() - prevDate > throttleAmount) {
 			prevDate = Date.now();
@@ -87,9 +115,6 @@ export default function init(options: RenderOptions) {
 			newPositions = move(positions);
 			drawItems(newPositions);
 		}
-		frame = requestAnimationFrame(() => {
-			animate(newPositions ?? positions);
-		});
 	}
 
 	function start() {
@@ -118,8 +143,8 @@ export default function init(options: RenderOptions) {
 
 	function updateZombie(val: boolean) {
 		stop();
-		isZombie = val;
-		move = moveInit({ border: canvasBorder, speed, range, hitbox, isZombie });
+		moveParams.isZombie = val;
+		move = moveInit(moveParams);
 		start();
 	}
 	return { updateFPS, updateCount, updateZombie };
