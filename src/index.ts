@@ -101,7 +101,7 @@ function init() {
 	}
 
 	const WIDTH = window.innerWidth;
-	const HEIGHT = 780;
+	const HEIGHT = window.innerHeight * 0.75;
 
 	function prepareCanvas(canvas: HTMLCanvasElement) {
 		canvas.width = WIDTH;
